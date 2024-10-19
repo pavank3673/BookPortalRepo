@@ -103,7 +103,12 @@ function showBooks() {
 
 function addBook() {
   let bookId = question("Enter Book Id to add to cart : ");
-  let quantity = Number.parseInt(question("\n Enter the quantity : "));
+  let quantity = Number.parseInt(question("\nEnter the quantity : "));
+
+  while (quantity > booklist[bookId].quantity) {
+    console.log("\nAvailable Quantity : " + booklist[bookId].quantity);
+    quantity = Number.parseInt(question("\nEnter the quantity : "));
+  }
 
   let book = {};
   book.book_name = booklist[bookId].name;
