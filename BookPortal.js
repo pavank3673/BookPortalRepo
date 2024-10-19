@@ -79,6 +79,10 @@ function showBooks() {
     "\nBook List:\n+---------+-----------------------+-------+------------+----------+\n| Book Id | Book Name             | Price | Status     | Quantity | \n+---------+-----------------------+-------+------------+----------+"
   );
   booklist.forEach((book, index) => {
+    if (book.quantity == 0) {
+      book.status = "unavailable";
+    }
+
     console.log(
       " " +
         index +
@@ -99,11 +103,12 @@ function showBooks() {
 
 function addBook() {
   let bookId = question("Enter Book Id to add to cart : ");
+  let quantity = Number.parseInt(question("\n Enter the quantity : "));
 
   let book = {};
   book.book_name = booklist[bookId].name;
   book.price = booklist[bookId].price;
-  book.quantity = 1;
+  book.quantity = quantity;
   book.total_price = book.price * book.quantity;
 
   let cartlistBook = cartlist.find((existingBook) => {
@@ -113,14 +118,14 @@ function addBook() {
   if (cartlistBook) {
     let cartlistBookIndex = cartlist.indexOf(cartlistBook);
     cartlist[cartlistBookIndex].quantity =
-      cartlist[cartlistBookIndex].quantity + 1;
+      cartlist[cartlistBookIndex].quantity + quantity;
     cartlist[cartlistBookIndex].total_price =
       cartlist[cartlistBookIndex].price * cartlist[cartlistBookIndex].quantity;
   } else {
     cartlist.push(book);
   }
 
-  booklist[bookId].quantity = booklist[bookId].quantity - 1;
+  booklist[bookId].quantity = booklist[bookId].quantity - quantity;
 
   menuDisplay();
 }
@@ -129,7 +134,7 @@ function showCart() {
   console.log(
     "\n Cart List :\n+-----------------------+-------+----------+-------------+\n| Book Name             | Price | Quantity | Total Price |\n+-----------------------+-------+----------+-------------+ "
   );
-
+  let cartValue = 0;
   cartlist.forEach((book) => {
     console.log(
       " " +
@@ -142,7 +147,10 @@ function showCart() {
         book.total_price +
         "\t"
     );
+    cartValue += book.total_price;
   });
+
+  console.log("Cart Value : " + cartValue);
 
   menuDisplay();
 }
