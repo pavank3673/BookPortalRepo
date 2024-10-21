@@ -159,9 +159,82 @@ function showCart() {
 
   menuDisplay();
 }
+
+function updateCart() {
+  if (cartlist.length == 0) {
+    console.log("Cart Empty");
+    menuDisplay();
+  } else {
+    let updateChoice = question(
+      "1) increase quantity \n2) decrease quantity \n3) remove \n"
+    );
+
+    if (updateChoice == 1) {
+      let existingBookId = question("Enter the Book Id : ");
+
+      let existingCartlistBookIndex = cartlist.findIndex((cartlistBook) => {
+        return booklist[existingBookId].name == cartlistBook.book_name;
+      });
+
+      if (existingCartlistBookIndex != -1) {
+        let updateQuantity = Number.parseInt(
+          question("\nEnter the Quantity : ")
+        );
+
+        if (updateQuantity <= booklist[existingBookId].quantity) {
+          cartlist[existingCartlistBookIndex].quantity += updateQuantity;
+          booklist[existingBookId].quantity -= updateQuantity;
+
+          if (booklist[existingBookId].quantity == 0) {
+            booklist[existingBookId].status = "unavailable";
+          }
+        }
+      }
+    } else if (updateChoice == 2) {
+      let existingBookId = question("Enter the Book Id : ");
+
+      let existingCartlistBookIndex = cartlist.findIndex((cartlistBook) => {
+        return booklist[existingBookId].name == cartlistBook.book_name;
+      });
+
+      if (existingCartlistBookIndex != -1) {
+        let updateQuantity = Number.parseInt(
+          question("\nEnter the Quantity : ")
+        );
+
+        if (updateQuantity <= cartlist[existingCartlistBookIndex].quantity) {
+          cartlist[existingCartlistBookIndex].quantity -= updateQuantity;
+          booklist[existingBookId].quantity += updateQuantity;
+
+          if (booklist[existingBookId].quantity != 0) {
+            booklist[existingBookId].status = "available";
+          }
+        }
+      }
+    } else if (updateChoice == 3) {
+      let existingBookId = question("Enter the Book Id : ");
+
+      let existingCartlistBookIndex = cartlist.findIndex((cartlistBook) => {
+        return booklist[existingBookId].name == cartlistBook.book_name;
+      });
+
+      booklist[existingBookId].quantity +=
+        cartlist[existingCartlistBookIndex].quantity;
+
+      if (booklist[existingBookId].quantity != 0) {
+        booklist[existingBookId].status = "available";
+      }
+
+      delete cartlist[existingCartlistBookIndex];
+    }
+  }
+
+  menuDisplay();
+}
+
 function menuDisplay() {
   let choice = question(
-    "Display Menu :- \n 1) show available books to users \n 2) add book \n 3) show cart \n"
+    "Display Menu :- \n 1) show available books to users \n 2) add book \n 3) show cart \n 4) update cart \n"
   );
 
   switch (choice) {
@@ -173,6 +246,9 @@ function menuDisplay() {
       break;
     case "3":
       showCart();
+      break;
+    case "4":
+      updateCart();
       break;
   }
 }
